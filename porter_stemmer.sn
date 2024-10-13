@@ -1,0 +1,136 @@
+// Étape 1 : Suppression des suffixes
+
+define step1a as (
+    [substring] 
+    (
+        'sses'    -> 'ss'
+        'ies'     -> 'i'
+        'ss'      -> 'ss'
+        's'       -> ''
+    )
+)
+
+define step1b as (
+    [substring]
+    (
+        'eed'     -> 'ee' :: if (m()>0)
+        ('ed' | 'ing')   -> '' :: if (contains_vowel(stem))
+    )
+)
+
+// 
+
+define step1c as (
+    [substring]
+    (
+        'y' -> 'i' :: if (contains_vowel(stem))
+    )
+)
+
+// Étape 3 : Traitement des suffixes complexes
+
+define step2 as (
+    [substring]
+    (
+        'ational' -> 'ate'
+        'tional'  -> 'tion'
+        'enci'    -> 'ence'
+        'anci'    -> 'ance'
+        'izer'    -> 'ize'
+        'abli'    -> 'able'
+        'alli'    -> 'al'
+        'entli'   -> 'ent'
+        'eli'     -> 'e'
+        'ousli'   -> 'ous'
+        'ization' -> 'ize'
+        'ation'   -> 'ate'
+        'ator'    -> 'ate'
+        'alism'   -> 'al'
+        'iveness' -> 'ive'
+        'fulness' -> 'ful'
+        'ousness' -> 'ous'
+        'aliti'   -> 'al'
+        'iviti'   -> 'ive'
+        'biliti'  -> 'ble'
+    )
+)
+
+// Étape 4 : Réduction finale des suffixes
+
+define step3 as (
+    [substring]
+    (
+        'icate' -> 'ic'
+        'ative' -> ''
+        'alize' -> 'al'
+        'iciti' -> 'ic'
+        'ical'  -> 'ic'
+        'ful'   -> ''
+        'ness'  -> ''
+    )
+)
+
+// Étape 5 : Nettoyage final
+
+define step4 as (
+    [substring]
+    (
+        'al'    -> ''
+        'ance'  -> ''
+        'ence'  -> ''
+        'er'    -> ''
+        'ic'    -> ''
+        'able'  -> ''
+        'ible'  -> ''
+        'ant'   -> ''
+        'ement' -> ''
+        'ment'  -> ''
+        'ent'   -> ''
+        'ion'   -> '' :: if (ends_with('s', 't'))
+        'ou'    -> ''
+        'ism'   -> ''
+        'ate'   -> ''
+        'iti'   -> ''
+        'ous'   -> ''
+        'ive'   -> ''
+        'ize'   -> ''
+    )
+)
+
+// Étape 6 : Suppression des e finaux
+
+define step5 as (
+    [substring]
+    (
+        'e' -> '' :: if (m() > 1)
+        'l' -> '' :: if (m() > 1 && double_consonant(stem))
+    )
+)
+
+// Fonction principale (Main function)
+define stem as (
+    step1a();
+    step1b();
+    step1c();
+    step2();
+    step3();
+    step4();
+    step5();
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
